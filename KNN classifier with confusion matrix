@@ -26,7 +26,7 @@ q=7
 knn_clf = KNeighborsClassifier(n_neighbors=q,weights='distance',algorithm='auto',p=2)#algorithm='auto'
 knn_clf.fit(x_train, y_train) 
 train_score = knn_clf.score(x_train, y_train) 
-test_score = knn_clf.score(x_test1, y_test1)
+test_score = knn_clf.score(x_test, y_test)
 #print("K=",q)
 print("test score=", test_score)
 

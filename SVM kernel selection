@@ -1,0 +1,62 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Apr 12 19:22:20 2020
+
+@author: liush
+"""
+
+data1=[7,14,21,22]
+#data1=[13,26,39,40]
+data2=[0.87,1.28,1.85,1.89]
+#data2=[1.31,2.61, 3.70,3.81]
+data3=[1.02,1.11,1.15,1.12]
+#data4=[1.38,2.05, 2.44,2.40]
+#data3=[1.10,1.39,1.61,1.42]
+data4=[1.21,1.39,1.73,1.63]
+#data4=[1.38,2.05, 2.44,2.40]
+data5=[1.26,1.64,1.79,1.62]
+#data5=[1.43,2.18,2.82,2.51]
+
+#plt.title('Programming time')
+plt.plot(data1, data2,  color='skyblue', label='kNN',ls='-',marker='*')
+plt.plot(data1, data3, color='green', label='SVM_linear',ls=':',marker='+')
+plt.plot(data1, data4, color='red', label='SVM_RBF',ls='--' ,marker='D')
+plt.plot(data1, data5, color='blue', label='SVM_Poly',ls='-.' ,marker='4')
+
+plt.legend()
+plt.xlabel('Feature dimension number')
+plt.ylabel('Time/s')
+plt.show()
+
+
+from sklearn.svm import SVC
+from sklearn.model_selection import GridSearchCV
+x1=pd.read_csv(r'D:\Download\FYP\python\0data\x1.csv',index_col=0).iloc[:,:13]    
+x2=pd.read_csv(r'D:\Download\FYP\python\0data\x2.csv',index_col=0).iloc[:,:13]    
+x3=pd.read_csv(r'D:\Download\FYP\python\0data\x3.csv',index_col=0).iloc[:,:13]    
+#x4=pd.read_csv(r'D:\Download\FYP\python\0data\x4.csv',index_col=0).iloc[:,:5]    
+x5=pd.read_csv(r'D:\Download\FYP\python\0data\x5.csv',index_col=0)  
+#x5=x5.multiply(math.log(x5,10))
+x=np.hstack((x1,x2,x3,x5))
+#x=x1
+y=pd.read_csv(r'D:\Download\FYP\python\0data\y.csv',index_col=0)
+y=np.ravel(y)
+x_train, x_test1, y_train, y_test1 = train_test_split(x, y, test_size=0.3, shuffle = True, stratify=y)
+
+svc = SVC()
+parameters = [
+    {
+        'C': [1, 3, 5, 7, 9, 11, 13, 15, 17, 19],
+        'gamma': [0.00001, 0.0001, 0.001, 0.1, 1, 10, 100, 1000],
+        'kernel': ['rbf']},
+    {
+        'C': [1, 3, 5, 7, 9, 11, 13, 15, 17, 19],
+        'kernel': ['linear']
+    }
+]
+clf = GridSearchCV(svc, parameters, cv=5, n_jobs=8)
+clf.fit(x, y)
+print(clf.best_params_)
+best_model = clf.best_estimator_
+best_model.predict(x_test1)
+
